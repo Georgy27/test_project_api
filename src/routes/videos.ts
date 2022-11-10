@@ -145,9 +145,10 @@ videoRouter.delete("/all-data", (req, res) => {
  videoRouter.delete("/:id", (req:Request<{id:string}>, res:Response) => {
  const videoId = +req.body.id
 
- if(!videoId) {
+ if(!videoId || videos.length === 0) {
      return res.status(404)
  }
+
  const newVideos = videos.filter((video)=> {
      return video.id !== videoId
  })
