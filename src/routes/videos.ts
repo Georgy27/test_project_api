@@ -64,7 +64,7 @@ videoRouter.delete("/all-data", (req, res) => {
             errorsMessages: [
                 {
                     message: "You don't have title or author or you didnt provide resolution",
-                    field: "title"
+                    field: "author"
                 }
                 ]
         })
