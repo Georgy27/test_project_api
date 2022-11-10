@@ -30,7 +30,13 @@ interface IVideo {
     P2160 = "P2160"
 }
 
-
+// testing
+videoRouter.delete("/all-data", (req, res) => {
+    console.log("hello there")
+    videos = []
+    return res.status(204)
+})
+// actual routers
  videoRouter.get("/", (req:Request, res:Response<IVideo[]>) => {
   res.status(200).send(videos)
     return
@@ -114,7 +120,7 @@ interface IVideo {
          }
      })
 
-     if(!title || typeof title !== "string" || title.length > 40 || !author || typeof author !== "string" || author.length > 20 || !availableResolutions || availableResolutions.length === 0 || !canBeDownloaded || typeof canBeDownloaded !== "boolean"
+     if(!title || typeof title !== "string" || title.length > 40 || !author || typeof author !== "string" || author.length > 20 || !availableResolutions || availableResolutions.length === 0 || typeof canBeDownloaded !== "boolean"
      || !minAgeRestriction || typeof minAgeRestriction !== "number" || minAgeRestriction < 1 || minAgeRestriction > 18 || !publicationDate || typeof publicationDate !== "string" ) {
          res.status(400).send({
              errorsMessages: [
@@ -132,7 +138,7 @@ interface IVideo {
          video.canBeDownloaded = canBeDownloaded
          video.minAgeRestriction = minAgeRestriction
          video.publicationDate = publicationDate
-         res.status(204)
+         res.status(204).send(video)
      }
 
  })
@@ -154,3 +160,5 @@ interface IVideo {
  }
 
  })
+
+export default videos

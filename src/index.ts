@@ -7,6 +7,7 @@ const port = 3500
 app.use(express.json())
 
 // routes
+app.use("/testing", videoRouter)
 app.use("/videos", videoRouter)
 
 app.listen(port, ()=> {

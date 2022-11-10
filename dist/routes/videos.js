@@ -21,6 +21,13 @@ var IResolutions;
     IResolutions["P1440"] = "P1440";
     IResolutions["P2160"] = "P2160";
 })(IResolutions || (IResolutions = {}));
+// testing
+exports.videoRouter.delete("/all-data", (req, res) => {
+    console.log("hello there");
+    videos = [];
+    return res.status(204);
+});
+// actual routers
 exports.videoRouter.get("/", (req, res) => {
     res.status(200).send(videos);
     return;
@@ -96,7 +103,7 @@ exports.videoRouter.put("/:id", (req, res) => {
             return;
         }
     });
-    if (!title || typeof title !== "string" || title.length > 40 || !author || typeof author !== "string" || author.length > 20 || !availableResolutions || availableResolutions.length === 0 || !canBeDownloaded || typeof canBeDownloaded !== "boolean"
+    if (!title || typeof title !== "string" || title.length > 40 || !author || typeof author !== "string" || author.length > 20 || !availableResolutions || availableResolutions.length === 0 || typeof canBeDownloaded !== "boolean"
         || !minAgeRestriction || typeof minAgeRestriction !== "number" || minAgeRestriction < 1 || minAgeRestriction > 18 || !publicationDate || typeof publicationDate !== "string") {
         res.status(400).send({
             errorsMessages: [
@@ -115,7 +122,7 @@ exports.videoRouter.put("/:id", (req, res) => {
         video.canBeDownloaded = canBeDownloaded;
         video.minAgeRestriction = minAgeRestriction;
         video.publicationDate = publicationDate;
-        res.status(204);
+        res.status(204).send(video);
     }
 });
 exports.videoRouter.delete("/:id", (req, res) => {
@@ -134,3 +141,4 @@ exports.videoRouter.delete("/:id", (req, res) => {
         return res.status(404);
     }
 });
+exports.default = videos;
