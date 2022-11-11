@@ -206,7 +206,8 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 
 })
 videoRouter.delete("/:id", (req: Request<{ id: string }>, res: Response) => {
-	const videoId = +req.body.id
+
+	const videoId = +req.params.id
 
 	// if (!videoId) {
 	// 	return res.sendStatus(404)

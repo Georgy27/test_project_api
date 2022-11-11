@@ -155,7 +155,7 @@ exports.videoRouter.put("/:id", (req, res) => {
     res.status(204).send(video);
 });
 exports.videoRouter.delete("/:id", (req, res) => {
-    const videoId = +req.body.id;
+    const videoId = +req.params.id;
     // if (!videoId) {
     // 	return res.sendStatus(404)
     // }
