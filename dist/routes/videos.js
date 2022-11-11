@@ -97,7 +97,7 @@ exports.videoRouter.put("/:id", (req, res) => {
         return video.id === +req.params.id;
     });
     if (!video) {
-        return res.status(404);
+        return res.sendStatus(404);
     }
     availableResolutions.map((value, index) => {
         if (!availableResolutionsArr.includes(value)) {

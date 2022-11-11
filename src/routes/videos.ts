@@ -121,7 +121,7 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 		return video.id === +req.params.id
 	})
 	if (!video) {
-		return res.status(404)
+		return res.sendStatus(404)
 	}
 
 	availableResolutions.map((value, index) => {
