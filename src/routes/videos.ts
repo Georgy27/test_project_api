@@ -30,13 +30,6 @@ enum IResolutions {
 	P2160 = "P2160"
 }
 
-let errorsMessages: { message: string, field: string }[] = [];
-
-const errorsAcc = (errors: { message: string, field: string }) => {
-
-	errorsMessages.push(errors)
-
-}
 
 // testing
 videoRouter.delete("/all-data", (req, res) => {
@@ -51,31 +44,30 @@ videoRouter.get("/", (req: Request, res: Response<IVideo[]>) => {
 	return
 })
 videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, availableResolutions: string[] }>, res: Response) => {
-   errorsMessages = []
+	let errorsMessages: { message: string, field: string }[] = []
 	const {title, author, availableResolutions} = req.body
 	availableResolutions.map((value, index) => {
 		if (!availableResolutionsArr.includes(value)) {
-			errorsAcc({
+			errorsMessages.push({
 				message: "You did not provide correct resolution",
 				field: "resolution"
 			})
-
 		}
 	})
 
 	if (!title || title.length > 40) {
 
-		errorsAcc(
+		errorsMessages.push(
 			{
 				message: "You don't have title or the title is incorrect",
 				field: "title"
-			})
-
+			}
+		)
 
 	}
 
 	if (!author || author.length > 20) {
-		errorsAcc(
+		errorsMessages.push(
 			{
 				message: "You don't have author or author is incorrect",
 				field: `${author}`
@@ -83,16 +75,16 @@ videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, ava
 	}
 
 	if (!availableResolutions || availableResolutions.length === 0) {
-		errorsAcc(
+		errorsMessages.push(
 			{
 				message: "You don't have availableResolutions",
 				field: "availableResolutions"
 			})
 	}
 
-if(errorsMessages.length > 1) {
-	return res.status(400).send(errorsMessages)
-}
+	if (errorsMessages.length > 1) {
+		return res.status(400).send(errorsMessages)
+	}
 	const newVideo: IVideo = {
 		id: videos.length,
 		title,
@@ -121,6 +113,7 @@ videoRouter.get("/:id", (req: Request<{ id: string }>, res: Response) => {
 })
 videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, author: string, availableResolutions: string[], canBeDownloaded: boolean, minAgeRestriction: number, publicationDate: string }>, res: Response) => {
 	const {title, author, availableResolutions, canBeDownloaded, minAgeRestriction, publicationDate} = req.body
+	let errorsMessages: { message: string, field: string }[] = []
 	let video = videos.find((video) => {
 		return video.id === +req.params.id
 	})
@@ -130,45 +123,80 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 
 	availableResolutions.map((value, index) => {
 		if (!availableResolutionsArr.includes(value)) {
-			res.status(400).send({
-				errorsMessages: [
-					{
-						message: "You did not provide correct resolution",
-						field: "resolution"
-					}
-				]
+			errorsMessages.push({
+				message: "You did not provide correct resolution",
+				field: "resolution"
 			})
-			return
 		}
 	})
 
-	if (!title || typeof title !== "string" || title.length > 40 || !author || typeof author !== "string" || author.length > 20 || !availableResolutions || availableResolutions.length === 0 || typeof canBeDownloaded !== "boolean"
-		|| !minAgeRestriction || typeof minAgeRestriction !== "number" || minAgeRestriction < 1 || minAgeRestriction > 18 || !publicationDate || typeof publicationDate !== "string") {
-		res.status(400).send({
-			errorsMessages: [
-				{
-					message: "You don't have title or author or you didnt provide resolution",
-					field: "title or author or resolution"
-				}
-			]
-		})
-		return
-	} else {
-		video.title = title
+
+	if (!title || title.length > 40) {
+
+		errorsMessages.push(
+			{
+				message: "You don't have title or the title is incorrect",
+				field: "title"
+			}
+		)
+
+	}
+
+	if (!author || author.length > 20) {
+		errorsMessages.push(
+			{
+				message: "You don't have author or author is incorrect",
+				field: `${author}`
+			})
+	}
+
+	if (!availableResolutions || availableResolutions.length === 0) {
+		errorsMessages.push(
+			{
+				message: "You don't have availableResolutions",
+				field: "availableResolutions"
+			})
+	}
+
+
+	if (!minAgeRestriction || minAgeRestriction < 1 || minAgeRestriction > 18) {
+
+		errorsMessages.push(
+			{
+				message: "I know you cant test this -_-",
+				field: "minAgeRestriction"
+			}
+		)
+
+	}
+
+	if(!publicationDate) {
+	errorsMessages.push(
+		{
+			message: "Это самурайский бекенннннннд",
+			field: "publicationDate"
+		}
+	)
+	}
+	if (errorsMessages.length > 1) {
+		return res.status(400).send(errorsMessages)
+	}
+
+	    video.title = title
 		video.author = author
 		video.availableResolutions = availableResolutions
 		video.canBeDownloaded = canBeDownloaded
 		video.minAgeRestriction = minAgeRestriction
 		video.publicationDate = publicationDate
 		res.status(204).send(video)
-	}
+
 
 })
 videoRouter.delete("/:id", (req: Request<{ id: string }>, res: Response) => {
 	const videoId = +req.body.id
 
 	if (!videoId || videos.length === 0) {
-		return res.status(404)
+		return res.sendStatus(404)
 	}
 
 	const newVideos = videos.filter((video) => {

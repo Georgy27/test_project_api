@@ -21,10 +21,6 @@ var IResolutions;
     IResolutions["P1440"] = "P1440";
     IResolutions["P2160"] = "P2160";
 })(IResolutions || (IResolutions = {}));
-let errorsMessages = [];
-const errorsAcc = (errors) => {
-    errorsMessages.push(errors);
-};
 // testing
 exports.videoRouter.delete("/all-data", (req, res) => {
     videos = [];
@@ -38,30 +34,30 @@ exports.videoRouter.get("/", (req, res) => {
     return;
 });
 exports.videoRouter.post("/", (req, res) => {
-    errorsMessages = [];
+    let errorsMessages = [];
     const { title, author, availableResolutions } = req.body;
     availableResolutions.map((value, index) => {
         if (!availableResolutionsArr.includes(value)) {
-            errorsAcc({
+            errorsMessages.push({
                 message: "You did not provide correct resolution",
                 field: "resolution"
             });
         }
     });
     if (!title || title.length > 40) {
-        errorsAcc({
+        errorsMessages.push({
             message: "You don't have title or the title is incorrect",
             field: "title"
         });
     }
     if (!author || author.length > 20) {
-        errorsAcc({
+        errorsMessages.push({
             message: "You don't have author or author is incorrect",
             field: `${author}`
         });
     }
     if (!availableResolutions || availableResolutions.length === 0) {
-        errorsAcc({
+        errorsMessages.push({
             message: "You don't have availableResolutions",
             field: "availableResolutions"
         });
@@ -95,6 +91,7 @@ exports.videoRouter.get("/:id", (req, res) => {
 });
 exports.videoRouter.put("/:id", (req, res) => {
     const { title, author, availableResolutions, canBeDownloaded, minAgeRestriction, publicationDate } = req.body;
+    let errorsMessages = [];
     let video = videos.find((video) => {
         return video.id === +req.params.id;
     });
@@ -103,43 +100,57 @@ exports.videoRouter.put("/:id", (req, res) => {
     }
     availableResolutions.map((value, index) => {
         if (!availableResolutionsArr.includes(value)) {
-            res.status(400).send({
-                errorsMessages: [
-                    {
-                        message: "You did not provide correct resolution",
-                        field: "resolution"
-                    }
-                ]
+            errorsMessages.push({
+                message: "You did not provide correct resolution",
+                field: "resolution"
             });
-            return;
         }
     });
-    if (!title || typeof title !== "string" || title.length > 40 || !author || typeof author !== "string" || author.length > 20 || !availableResolutions || availableResolutions.length === 0 || typeof canBeDownloaded !== "boolean"
-        || !minAgeRestriction || typeof minAgeRestriction !== "number" || minAgeRestriction < 1 || minAgeRestriction > 18 || !publicationDate || typeof publicationDate !== "string") {
-        res.status(400).send({
-            errorsMessages: [
-                {
-                    message: "You don't have title or author or you didnt provide resolution",
-                    field: "title or author or resolution"
-                }
-            ]
+    if (!title || title.length > 40) {
+        errorsMessages.push({
+            message: "You don't have title or the title is incorrect",
+            field: "title"
         });
-        return;
     }
-    else {
-        video.title = title;
-        video.author = author;
-        video.availableResolutions = availableResolutions;
-        video.canBeDownloaded = canBeDownloaded;
-        video.minAgeRestriction = minAgeRestriction;
-        video.publicationDate = publicationDate;
-        res.status(204).send(video);
+    if (!author || author.length > 20) {
+        errorsMessages.push({
+            message: "You don't have author or author is incorrect",
+            field: `${author}`
+        });
     }
+    if (!availableResolutions || availableResolutions.length === 0) {
+        errorsMessages.push({
+            message: "You don't have availableResolutions",
+            field: "availableResolutions"
+        });
+    }
+    if (!minAgeRestriction || minAgeRestriction < 1 || minAgeRestriction > 18) {
+        errorsMessages.push({
+            message: "I know you cant test this -_-",
+            field: "minAgeRestriction"
+        });
+    }
+    if (!publicationDate) {
+        errorsMessages.push({
+            message: "Это самурайский бекенннннннд",
+            field: "publicationDate"
+        });
+    }
+    if (errorsMessages.length > 1) {
+        return res.status(400).send(errorsMessages);
+    }
+    video.title = title;
+    video.author = author;
+    video.availableResolutions = availableResolutions;
+    video.canBeDownloaded = canBeDownloaded;
+    video.minAgeRestriction = minAgeRestriction;
+    video.publicationDate = publicationDate;
+    res.status(204).send(video);
 });
 exports.videoRouter.delete("/:id", (req, res) => {
     const videoId = +req.body.id;
     if (!videoId || videos.length === 0) {
-        return res.status(404);
+        return res.sendStatus(404);
     }
     const newVideos = videos.filter((video) => {
         return video.id !== videoId;
