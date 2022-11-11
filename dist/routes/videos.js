@@ -21,11 +21,16 @@ var IResolutions;
     IResolutions["P1440"] = "P1440";
     IResolutions["P2160"] = "P2160";
 })(IResolutions || (IResolutions = {}));
+let errorsMessages = [];
+const errorsAcc = (errors) => {
+    errorsMessages.push(errors);
+};
 // testing
 exports.videoRouter.delete("/all-data", (req, res) => {
-    console.log("hello there");
     videos = [];
-    return res.status(204);
+    // return res.status(204).send()
+    // return res.send(204)
+    return res.sendStatus(204);
 });
 // actual routers
 exports.videoRouter.get("/", (req, res) => {
@@ -33,30 +38,36 @@ exports.videoRouter.get("/", (req, res) => {
     return;
 });
 exports.videoRouter.post("/", (req, res) => {
+    errorsMessages = [];
     const { title, author, availableResolutions } = req.body;
     availableResolutions.map((value, index) => {
         if (!availableResolutionsArr.includes(value)) {
-            res.status(400).send({
-                errorsMessages: [
-                    {
-                        message: "You did not provide correct resolution",
-                        field: "resolution"
-                    }
-                ]
+            errorsAcc({
+                message: "You did not provide correct resolution",
+                field: "resolution"
             });
-            return;
         }
     });
-    if (!title || typeof title !== "string" || title.length > 40 || !author || typeof author !== "string" || author.length > 20 || !availableResolutions || availableResolutions.length === 0) {
-        res.status(400).send({
-            errorsMessages: [
-                {
-                    message: "You don't have title or author or you didnt provide resolution",
-                    field: "author"
-                }
-            ]
+    if (!title || title.length > 40) {
+        errorsAcc({
+            message: "You don't have title or the title is incorrect",
+            field: "title"
         });
-        return;
+    }
+    if (!author || author.length > 20) {
+        errorsAcc({
+            message: "You don't have author or author is incorrect",
+            field: `${author}`
+        });
+    }
+    if (!availableResolutions || availableResolutions.length === 0) {
+        errorsAcc({
+            message: "You don't have availableResolutions",
+            field: "availableResolutions"
+        });
+    }
+    if (errorsMessages.length > 1) {
+        return res.status(400).send(errorsMessages);
     }
     const newVideo = {
         id: videos.length,
@@ -76,7 +87,7 @@ exports.videoRouter.get("/:id", (req, res) => {
         return video.id === +req.params.id;
     });
     if (!foundVideo) {
-        return res.status(404);
+        return res.sendStatus(404);
     }
     else {
         return res.status(200).send(foundVideo);
@@ -135,10 +146,10 @@ exports.videoRouter.delete("/:id", (req, res) => {
     });
     if (newVideos.length < videos.length) {
         videos = newVideos;
-        return res.status(204);
+        return res.sendStatus(204);
     }
     else {
-        return res.status(404);
+        return res.sendStatus(404);
     }
 });
 exports.default = videos;
