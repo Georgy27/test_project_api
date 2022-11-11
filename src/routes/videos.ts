@@ -195,9 +195,9 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 videoRouter.delete("/:id", (req: Request<{ id: string }>, res: Response) => {
 	const videoId = +req.body.id
 
-	if (!videoId || videos.length === 0) {
-		return res.sendStatus(404)
-	}
+	// if (!videoId) {
+	// 	return res.sendStatus(404)
+	// }
 
 	const newVideos = videos.filter((video) => {
 		return video.id !== videoId

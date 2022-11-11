@@ -149,9 +149,9 @@ exports.videoRouter.put("/:id", (req, res) => {
 });
 exports.videoRouter.delete("/:id", (req, res) => {
     const videoId = +req.body.id;
-    if (!videoId || videos.length === 0) {
-        return res.sendStatus(404);
-    }
+    // if (!videoId) {
+    // 	return res.sendStatus(404)
+    // }
     const newVideos = videos.filter((video) => {
         return video.id !== videoId;
     });
