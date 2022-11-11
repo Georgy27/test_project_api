@@ -40,17 +40,17 @@ exports.videoRouter.post("/", (req, res) => {
         if (!availableResolutionsArr.includes(value)) {
             errorsMessages.push({
                 message: "You did not provide correct resolution",
-                field: "resolution"
+                field: "availableResolutions"
             });
         }
     });
-    if (!title || title.length > 40 || title.trim().length === 0) {
+    if (!title || title.length > 40 || title.trim().length === 0 || typeof title !== "string") {
         errorsMessages.push({
             message: "You don't have title or the title is incorrect",
             field: "title"
         });
     }
-    if (!author || author.length > 20 || author.trim().length === 0) {
+    if (!author || author.length > 20 || author.trim().length === 0 || typeof author !== "string") {
         errorsMessages.push({
             message: "You don't have author or author is incorrect",
             field: "author"
@@ -103,17 +103,17 @@ exports.videoRouter.put("/:id", (req, res) => {
         if (!availableResolutionsArr.includes(value)) {
             errorsMessages.push({
                 message: "You did not provide correct resolution",
-                field: "resolution"
+                field: "availableResolutions"
             });
         }
     });
-    if (!title || title.length > 40 || title.trim().length === 0) {
+    if (!title || title.length > 40 || title.trim().length === 0 || typeof title !== "string") {
         errorsMessages.push({
             message: "You don't have title or the title is incorrect",
             field: "title"
         });
     }
-    if (!author || author.length > 20 || author.trim().length === 0) {
+    if (!author || author.length > 20 || author.trim().length === 0 || typeof author !== "string") {
         errorsMessages.push({
             message: "You don't have author or author is incorrect",
             field: "author"
@@ -125,13 +125,13 @@ exports.videoRouter.put("/:id", (req, res) => {
             field: "availableResolutions"
         });
     }
-    if (!minAgeRestriction || minAgeRestriction < 1 || minAgeRestriction > 18) {
+    if (!minAgeRestriction || minAgeRestriction < 1 || minAgeRestriction > 18 || typeof minAgeRestriction !== "number") {
         errorsMessages.push({
             message: "I know you cant test this -_-",
             field: "minAgeRestriction"
         });
     }
-    if (!publicationDate) {
+    if (!publicationDate || typeof publicationDate !== "string") {
         errorsMessages.push({
             message: "Это самурайский бекенннннннд",
             field: "publicationDate"

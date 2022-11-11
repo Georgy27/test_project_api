@@ -50,12 +50,12 @@ videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, ava
 		if (!availableResolutionsArr.includes(value)) {
 			errorsMessages.push({
 				message: "You did not provide correct resolution",
-				field: "resolution"
+				field: "availableResolutions"
 			})
 		}
 	})
 
-	if (!title || title.length > 40 || title.trim().length === 0) {
+	if (!title || title.length > 40 || title.trim().length === 0 || typeof title !== "string") {
 
 		errorsMessages.push(
 			{
@@ -66,7 +66,7 @@ videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, ava
 
 	}
 
-	if (!author || author.length > 20 || author.trim().length === 0) {
+	if (!author || author.length > 20 || author.trim().length === 0 || typeof author !== "string") {
 		errorsMessages.push(
 			{
 				message: "You don't have author or author is incorrect",
@@ -128,13 +128,13 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 		if (!availableResolutionsArr.includes(value)) {
 			errorsMessages.push({
 				message: "You did not provide correct resolution",
-				field: "resolution"
+				field: "availableResolutions"
 			})
 		}
 	})
 
 
-	if (!title || title.length > 40 || title.trim().length === 0) {
+	if (!title || title.length > 40 || title.trim().length === 0 || typeof title !== "string") {
 
 		errorsMessages.push(
 			{
@@ -145,7 +145,7 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 
 	}
 
-	if (!author || author.length > 20 || author.trim().length === 0) {
+	if (!author || author.length > 20 || author.trim().length === 0 || typeof author !== "string") {
 		errorsMessages.push(
 			{
 				message: "You don't have author or author is incorrect",
@@ -162,7 +162,7 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 	}
 
 
-	if (!minAgeRestriction || minAgeRestriction < 1 || minAgeRestriction > 18) {
+	if (!minAgeRestriction || minAgeRestriction < 1 || minAgeRestriction > 18 || typeof minAgeRestriction !== "number") {
 
 		errorsMessages.push(
 			{
@@ -173,7 +173,7 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 
 	}
 
-	if(!publicationDate) {
+	if(!publicationDate || typeof publicationDate !== "string") {
 	errorsMessages.push(
 		{
 			message: "Это самурайский бекенннннннд",
