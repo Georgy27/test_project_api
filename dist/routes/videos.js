@@ -62,18 +62,6 @@ exports.videoRouter.post("/", (req, res) => {
             field: "availableResolutions"
         });
     }
-    if (!minAgeRestriction || minAgeRestriction < 1 || minAgeRestriction > 18) {
-        errorsMessages.push({
-            message: "I know you cant test this -_-",
-            field: "minAgeRestriction"
-        });
-    }
-    if (!publicationDate) {
-        errorsMessages.push({
-            message: "Это самурайский бекенннннннд",
-            field: "publicationDate"
-        });
-    }
     if (errorsMessages.length > 1) {
         return res.status(400).send({ errorsMessages: errorsMessages });
     }
