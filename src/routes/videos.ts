@@ -83,9 +83,11 @@ videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, ava
 	}
 
 
-	if (errorsMessages.length > 1) {
-		return res.status(400).send({errorsMessages: errorsMessages})
+	if (errorsMessages.length >= 1) {
+		res.status(400).send({errorsMessages: errorsMessages})
+		return
 	}
+
 	const newVideo: IVideo = {
 		id: videos.length,
 		title,
@@ -179,7 +181,7 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 		}
 	)
 	}
-	if (errorsMessages.length > 1) {
+	if (errorsMessages.length >= 1) {
 		return res.status(400).send({errorsMessages: errorsMessages})
 	}
 

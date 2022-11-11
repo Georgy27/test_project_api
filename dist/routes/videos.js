@@ -62,8 +62,9 @@ exports.videoRouter.post("/", (req, res) => {
             field: "availableResolutions"
         });
     }
-    if (errorsMessages.length > 1) {
-        return res.status(400).send({ errorsMessages: errorsMessages });
+    if (errorsMessages.length >= 1) {
+        res.status(400).send({ errorsMessages: errorsMessages });
+        return;
     }
     const newVideo = {
         id: videos.length,
@@ -136,7 +137,7 @@ exports.videoRouter.put("/:id", (req, res) => {
             field: "publicationDate"
         });
     }
-    if (errorsMessages.length > 1) {
+    if (errorsMessages.length >= 1) {
         return res.status(400).send({ errorsMessages: errorsMessages });
     }
     video.title = title;
