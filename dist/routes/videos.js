@@ -35,7 +35,7 @@ exports.videoRouter.get("/", (req, res) => {
 });
 exports.videoRouter.post("/", (req, res) => {
     let errorsMessages = [];
-    const { title, author, availableResolutions } = req.body;
+    const { title, author, availableResolutions, minAgeRestriction, publicationDate, canBeDownloaded } = req.body;
     availableResolutions.map((value, index) => {
         if (!availableResolutionsArr.includes(value)) {
             errorsMessages.push({
@@ -62,6 +62,18 @@ exports.videoRouter.post("/", (req, res) => {
             field: "availableResolutions"
         });
     }
+    if (!minAgeRestriction || minAgeRestriction < 1 || minAgeRestriction > 18) {
+        errorsMessages.push({
+            message: "I know you cant test this -_-",
+            field: "minAgeRestriction"
+        });
+    }
+    if (!publicationDate) {
+        errorsMessages.push({
+            message: "Это самурайский бекенннннннд",
+            field: "publicationDate"
+        });
+    }
     if (errorsMessages.length > 1) {
         return res.status(400).send({ errorsMessages: errorsMessages });
     }
@@ -69,10 +81,10 @@ exports.videoRouter.post("/", (req, res) => {
         id: videos.length,
         title,
         author,
-        canBeDownloaded: false,
-        minAgeRestriction: null,
+        canBeDownloaded: canBeDownloaded || false,
+        minAgeRestriction: minAgeRestriction || null,
         createdAt: dateNow.toISOString(),
-        publicationDate: (0, addDays_1.default)(dateNow, 1).toISOString(),
+        publicationDate: publicationDate || (0, addDays_1.default)(dateNow, 1).toISOString(),
         availableResolutions,
     };
     videos.push(newVideo);

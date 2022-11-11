@@ -43,9 +43,9 @@ videoRouter.get("/", (req: Request, res: Response<IVideo[]>) => {
 	res.status(200).send(videos)
 	return
 })
-videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, availableResolutions: string[] }>, res: Response) => {
+videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, availableResolutions: string[], minAgeRestriction?: number, publicationDate?:string, canBeDownloaded?:boolean }>, res: Response) => {
 	let errorsMessages: { message: string, field: string }[] = []
-	const {title, author, availableResolutions} = req.body
+	const {title, author, availableResolutions, minAgeRestriction, publicationDate, canBeDownloaded} = req.body
 	availableResolutions.map((value, index) => {
 		if (!availableResolutionsArr.includes(value)) {
 			errorsMessages.push({
@@ -82,6 +82,26 @@ videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, ava
 			})
 	}
 
+	if (!minAgeRestriction || minAgeRestriction < 1 || minAgeRestriction > 18) {
+
+		errorsMessages.push(
+			{
+				message: "I know you cant test this -_-",
+				field: "minAgeRestriction"
+			}
+		)
+
+	}
+
+	if(!publicationDate) {
+		errorsMessages.push(
+			{
+				message: "Это самурайский бекенннннннд",
+				field: "publicationDate"
+			}
+		)
+	}
+
 	if (errorsMessages.length > 1) {
 		return res.status(400).send({errorsMessages: errorsMessages})
 	}
@@ -89,10 +109,10 @@ videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, ava
 		id: videos.length,
 		title,
 		author,
-		canBeDownloaded: false,
-		minAgeRestriction: null,
+		canBeDownloaded: canBeDownloaded || false,
+		minAgeRestriction: minAgeRestriction || null,
 		createdAt: dateNow.toISOString(),
-		publicationDate: addDays(dateNow, 1).toISOString(),
+		publicationDate: publicationDate || addDays(dateNow, 1).toISOString(),
 		availableResolutions,
 	}
 
