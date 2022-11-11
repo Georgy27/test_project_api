@@ -55,7 +55,7 @@ videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, ava
 		}
 	})
 
-	if (!title || title.length > 40) {
+	if (!title || title.length > 40 || title.trim().length === 0) {
 
 		errorsMessages.push(
 			{
@@ -66,7 +66,7 @@ videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, ava
 
 	}
 
-	if (!author || author.length > 20) {
+	if (!author || author.length > 20 || author.trim().length === 0) {
 		errorsMessages.push(
 			{
 				message: "You don't have author or author is incorrect",
@@ -74,7 +74,7 @@ videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, ava
 			})
 	}
 
-	if (!availableResolutions || availableResolutions.length === 0) {
+	if (!availableResolutions || availableResolutions.length > availableResolutionsArr.length  || availableResolutions.length === 0) {
 		errorsMessages.push(
 			{
 				message: "You don't have availableResolutions",
@@ -83,7 +83,7 @@ videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, ava
 	}
 
 	if (errorsMessages.length > 1) {
-		return res.status(400).send(errorsMessages)
+		return res.status(400).send({errorsMessages: errorsMessages})
 	}
 	const newVideo: IVideo = {
 		id: videos.length,
@@ -131,7 +131,7 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 	})
 
 
-	if (!title || title.length > 40) {
+	if (!title || title.length > 40 || title.trim().length === 0) {
 
 		errorsMessages.push(
 			{
@@ -142,7 +142,7 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 
 	}
 
-	if (!author || author.length > 20) {
+	if (!author || author.length > 20 || author.trim().length === 0) {
 		errorsMessages.push(
 			{
 				message: "You don't have author or author is incorrect",
@@ -150,7 +150,7 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 			})
 	}
 
-	if (!availableResolutions || availableResolutions.length === 0) {
+	if (!availableResolutions || availableResolutions.length > availableResolutionsArr.length  || availableResolutions.length === 0) {
 		errorsMessages.push(
 			{
 				message: "You don't have availableResolutions",
@@ -179,7 +179,7 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 	)
 	}
 	if (errorsMessages.length > 1) {
-		return res.status(400).send(errorsMessages)
+		return res.status(400).send({errorsMessages: errorsMessages})
 	}
 
 	    video.title = title
@@ -212,4 +212,3 @@ videoRouter.delete("/:id", (req: Request<{ id: string }>, res: Response) => {
 
 })
 
-export default videos

@@ -4,6 +4,7 @@ import {videoRouter} from "./routes/videos";
 const app = express()
 const port = 3500
 
+// app.use()
 app.use(express.json())
 
 // routes

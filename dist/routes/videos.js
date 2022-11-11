@@ -44,26 +44,26 @@ exports.videoRouter.post("/", (req, res) => {
             });
         }
     });
-    if (!title || title.length > 40) {
+    if (!title || title.length > 40 || title.trim().length === 0) {
         errorsMessages.push({
             message: "You don't have title or the title is incorrect",
             field: "title"
         });
     }
-    if (!author || author.length > 20) {
+    if (!author || author.length > 20 || author.trim().length === 0) {
         errorsMessages.push({
             message: "You don't have author or author is incorrect",
             field: `${author}`
         });
     }
-    if (!availableResolutions || availableResolutions.length === 0) {
+    if (!availableResolutions || availableResolutions.length > availableResolutionsArr.length || availableResolutions.length === 0) {
         errorsMessages.push({
             message: "You don't have availableResolutions",
             field: "availableResolutions"
         });
     }
     if (errorsMessages.length > 1) {
-        return res.status(400).send(errorsMessages);
+        return res.status(400).send({ errorsMessages: errorsMessages });
     }
     const newVideo = {
         id: videos.length,
@@ -106,19 +106,19 @@ exports.videoRouter.put("/:id", (req, res) => {
             });
         }
     });
-    if (!title || title.length > 40) {
+    if (!title || title.length > 40 || title.trim().length === 0) {
         errorsMessages.push({
             message: "You don't have title or the title is incorrect",
             field: "title"
         });
     }
-    if (!author || author.length > 20) {
+    if (!author || author.length > 20 || author.trim().length === 0) {
         errorsMessages.push({
             message: "You don't have author or author is incorrect",
             field: `${author}`
         });
     }
-    if (!availableResolutions || availableResolutions.length === 0) {
+    if (!availableResolutions || availableResolutions.length > availableResolutionsArr.length || availableResolutions.length === 0) {
         errorsMessages.push({
             message: "You don't have availableResolutions",
             field: "availableResolutions"
@@ -137,7 +137,7 @@ exports.videoRouter.put("/:id", (req, res) => {
         });
     }
     if (errorsMessages.length > 1) {
-        return res.status(400).send(errorsMessages);
+        return res.status(400).send({ errorsMessages: errorsMessages });
     }
     video.title = title;
     video.author = author;
@@ -163,4 +163,3 @@ exports.videoRouter.delete("/:id", (req, res) => {
         return res.sendStatus(404);
     }
 });
-exports.default = videos;
