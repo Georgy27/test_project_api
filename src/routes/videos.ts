@@ -70,7 +70,7 @@ videoRouter.post("/", (req: Request<{}, {}, { title: string, author: string, ava
 		errorsMessages.push(
 			{
 				message: "You don't have author or author is incorrect",
-				field: `${author}`
+				field: "author"
 			})
 	}
 
@@ -149,7 +149,7 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 		errorsMessages.push(
 			{
 				message: "You don't have author or author is incorrect",
-				field: `${author}`
+				field: "author"
 			})
 	}
 
@@ -181,6 +181,16 @@ videoRouter.put("/:id", (req: Request<{ id: string }, {}, { title: string, autho
 		}
 	)
 	}
+
+	if(typeof canBeDownloaded !== "boolean") {
+		errorsMessages.push(
+			{
+				message: "Это самурайский бекенннннннд!",
+				field: "canBeDownloaded"
+			}
+		)
+	}
+
 	if (errorsMessages.length >= 1) {
 		return res.status(400).send({errorsMessages: errorsMessages})
 	}

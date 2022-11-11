@@ -53,7 +53,7 @@ exports.videoRouter.post("/", (req, res) => {
     if (!author || author.length > 20 || author.trim().length === 0) {
         errorsMessages.push({
             message: "You don't have author or author is incorrect",
-            field: `${author}`
+            field: "author"
         });
     }
     if (!availableResolutions || availableResolutions.length > availableResolutionsArr.length || availableResolutions.length === 0) {
@@ -116,7 +116,7 @@ exports.videoRouter.put("/:id", (req, res) => {
     if (!author || author.length > 20 || author.trim().length === 0) {
         errorsMessages.push({
             message: "You don't have author or author is incorrect",
-            field: `${author}`
+            field: "author"
         });
     }
     if (!availableResolutions || availableResolutions.length > availableResolutionsArr.length || availableResolutions.length === 0) {
@@ -135,6 +135,12 @@ exports.videoRouter.put("/:id", (req, res) => {
         errorsMessages.push({
             message: "Это самурайский бекенннннннд",
             field: "publicationDate"
+        });
+    }
+    if (typeof canBeDownloaded !== "boolean") {
+        errorsMessages.push({
+            message: "Это самурайский бекенннннннд!",
+            field: "canBeDownloaded"
         });
     }
     if (errorsMessages.length >= 1) {
